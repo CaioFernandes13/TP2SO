@@ -43,7 +43,7 @@ typedef struct {
 }ProcessManager;
 
 void iniciarProcessManager(ProcessManager processManager); //Criar o primeiro processo (com o ID = 0) e inicializar todas as suas estruturas de dados
-void leituraCommander(); // process manager recebe, repetidamente, e processa um comando por vez, a partir do processo commander
+void leituraCommander(char comando); // process manager recebe, repetidamente, e processa um comando por vez, a partir do processo commander
                          /* Ao receber um comando Q, process manager
                             executa a próxima instrução do processo simulado, atualmente em execução, incrementa
                             o valor do contador de programa (exceto para instruções F ou R), incrementa Time e

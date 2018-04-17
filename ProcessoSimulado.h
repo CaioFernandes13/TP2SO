@@ -3,10 +3,12 @@
 //
 
 #include "ArquivoTexto.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 #ifndef TP2SO_PROCESSOSIMULADO_H
 #define TP2SO_PROCESSOSIMULADO_H
-#define MAXTAMINSTRUCTION 100;
+#define MAXTAMINSTRUCTION 100
 
 typedef struct {
     int PID;

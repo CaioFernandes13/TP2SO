@@ -7,4 +7,7 @@
 #ifndef TP2SO_COMMANDER_H
 #define TP2SO_COMMANDER_H
 
+void entradaPadrao();
+void entradaArquivo();
+
 #endif //TP2SO_COMMANDER_H

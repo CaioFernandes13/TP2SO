@@ -6,13 +6,13 @@
 #include "ProcessoSimulado.h"
 
 void iniciarBlockedState(ProcessManager * processManager){
-
+    fazFVazia(&(processManager->blockedState.filaBlocked));
 }
 void iniciarReadyState(ProcessManager * processManager){
-
+    fazFVazia(&(processManager->readyState.filaReady));
 }
-void iniciarPcbTable(ProcessManager * processManager){
-
+void iniciarPcbTable(ProcessManager * processManager, ProcessoSimulado processoSimulado){
+    processManager->pcbTable.processoSimulado[0] = processoSimulado;
 }
 
 ProcessManager iniciarProcessManager(){
@@ -34,10 +34,9 @@ ProcessManager iniciarProcessManager(){
     processManager.runningState.processo = &processoSimulado;
     iniciarBlockedState(&processManager);
     iniciarReadyState(&processManager);
-    iniciarPcbTable(&processManager);
+    iniciarPcbTable(&processManager, processoSimulado);
 
     return processManager;
-
 }
 
 

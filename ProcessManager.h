@@ -4,7 +4,8 @@
 
 #include "ProcessoSimulado.h"
 #include "Reporter.h"
-
+#include "TADFila.h"
+#define QUANTMAXPROCESSEXEC 1000
 #ifndef TP2SO_PROCESSMANAGER_H
 #define TP2SO_PROCESSMANAGER_H
 
@@ -17,15 +18,18 @@ typedef struct {
 }Cpu;
 
 typedef  struct {
-    //Lista(Vetor) de processos que ainda não terminou a sua execução
+    //Lista(Vetor) de processos que ainda não terminaram a sua execução
+    ProcessoSimulado processoSimulado[QUANTMAXPROCESSEXEC];
 }PcbTable;
 
 typedef struct {
     //Lista de processos que estão prontos para executar ----- Usar fila ou fila de prioridades
+    TFila filaReady;
 }ReadyState;
 
 typedef struct {
     //Lista de processos que estão bloqueados no momento ----- Usar fila
+    TFila filaBlocked;
 }BlockedState;
 
 typedef struct {

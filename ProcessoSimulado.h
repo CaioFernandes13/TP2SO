@@ -2,13 +2,15 @@
 // Created by caio on 16/04/18.
 //
 
-#include "ArquivoTexto.h"
-#include <stdlib.h>
-#include <stdio.h>
 
 #ifndef TP2SO_PROCESSOSIMULADO_H
 #define TP2SO_PROCESSOSIMULADO_H
 #define MAXTAMINSTRUCTION 100
+
+#include <stdlib.h>
+#include <stdio.h>
+#include "ProcessManager.h"
+#include "ArquivoTexto.h"
 
 typedef struct {
     int PID;
@@ -23,5 +25,5 @@ typedef struct {
 }ProcessoSimulado;
 
 void lerPrograma(ProcessoSimulado *processoSimulado, char* nomeArq);
-void executarProcesso(ProcessoSimulado *processoSimulado);
+void executarInstrucao(char *processoSimulado, int *n, char *arqNovoProcesso);
 #endif //TP2SO_PROCESSOSIMULADO_H

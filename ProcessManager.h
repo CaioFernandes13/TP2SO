@@ -2,19 +2,26 @@
 // Created by caio on 16/04/18.
 //
 
-#include "ProcessoSimulado.h"
-#include "Reporter.h"
-#include "TADFila.h"
+
 #define QUANTMAXPROCESSEXEC 1000
 #ifndef TP2SO_PROCESSMANAGER_H
 #define TP2SO_PROCESSMANAGER_H
+
+#include "ProcessoSimulado.h"
+#include "Reporter.h"
+#include "TADFila.h"
+
+enum estados_processo{EXECUTANDO, PRONTO, BLOQUEADO};
 
 typedef int Time;
 
 typedef struct {
     //armazenar um ponteiro para o vetor de programa -> struct do processo simulado
-    ProcessoSimulado *processo;
-
+    char** vetorProgram;
+    int PC;
+    int n;
+    int timeProcess;
+    int usedTime;
 }Cpu;
 
 typedef  struct {
@@ -32,10 +39,7 @@ typedef struct {
     TFila filaBlocked;
 }BlockedState;
 
-typedef struct {
-    //Processo que está sendo executado no momento----- Usar indice de PcbTable do processo simulado atualmente em execução
-    ProcessoSimulado * processo;
-}RunningState;
+typedef int RunningState; //Processo que está sendo executado no momento----- Usar indice de PcbTable do processo simulado atualmente em execução
 
 
 typedef struct {

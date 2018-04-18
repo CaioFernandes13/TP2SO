@@ -18,23 +18,30 @@ void iniciarPcbTable(ProcessManager * processManager, ProcessoSimulado processoS
 ProcessManager iniciarProcessManager(){
     ProcessManager processManager;
     ProcessoSimulado processoSimulado;
-
+    /* Iniciando processo simulado */
     processoSimulado.PID = 0;
     processoSimulado.PPID = 0;
     lerPrograma(&processoSimulado, "init");
     processoSimulado.CPUtime = 0;
     processoSimulado.n = 0;
-    *(processoSimulado.PC) = -1;
+    *(processoSimulado.PC) = 0;
     processoSimulado.priority = 0;
-    processoSimulado.startTime = 0;
-    processoSimulado.state = 0;
-
+    processoSimulado.startTime = 0; //__TIME__;
+    processoSimulado.state = EXECUTANDO; //Enum estados_processo = 0
+    /* Iniciando PcbTable com o processo simulado */
+    iniciarPcbTable(&processManager, processoSimulado);
+    /* Iniciando o time */
     processManager.time = 0;
-    processManager.cpu.processo = &processoSimulado;
-    processManager.runningState.processo = &processoSimulado;
+    /* Iniciando a CPU com o primeiro processo simulado */
+    processManager.cpu.PC = *(processoSimulado.PC);
+    processManager.cpu.n = processoSimulado.n;
+    processManager.cpu.timeProcess = 1; //Unidades de tempo que o processo tem,
+    processManager.cpu.usedTime = 0;
+    processManager.cpu.vetorProgram = processoSimulado.vetorProgram;
+    /* Iniciando processo simulado */
+    processManager.runningState = 0;
     iniciarBlockedState(&processManager);
     iniciarReadyState(&processManager);
-    iniciarPcbTable(&processManager, processoSimulado);
 
     return processManager;
 }
@@ -42,13 +49,15 @@ ProcessManager iniciarProcessManager(){
 
 
 void comandoQ(ProcessManager *processManager){
-    int PC = processManager->cpu.processo->PC;
-    char instrucao;
-    instrucao = processManager->cpu.processo->vetorProgram[PC+1][0];
-    if(instrucao == 'F' || instrucao == 'R');
+    int PC = processManager->cpu.PC;
+    char *instrucao, *arqNovoProcesso;
+    instrucao = processManager->cpu.vetorProgram[PC];
+    if(instrucao[0] == 'F' || instrucao[0] == 'R'){
+        executarInstrucao(instrucao, &(processManager->cpu.n), arqNovoProcesso); //Executar proxima linha de programa do processo
+    }
     else{
-        processManager->cpu.processo->PC = PC + 1;
-        executarProcesso(&(processManager->cpu.processo)); //Executar proxima linha de programa do processo
+        executarInstrucao(instrucao, &(processManager->cpu.n), arqNovoProcesso); //Executar proxima linha de programa do processo
+        processManager->cpu.PC = PC + 1;
     }
     processManager->time = processManager->time + 1;
     //escalonar(processManager);
@@ -56,18 +65,19 @@ void comandoQ(ProcessManager *processManager){
 }
 
 void comandoU(ProcessManager *processManager){
-    ProcessoSimulado processoSimuladoProx;
-    //processoSimuladoProx = processManager->blockedState.primeiro;
-    //processManager->blockedState.primeiro = processManager->blockedState.primeiro.prox;
-    //insereReadyState(processManager->readyState, processoSimuladoProx);
+    int indiceProcesso;
+    desenfileirar(&(processManager->blockedState.filaBlocked), &indiceProcesso);
+    enfileirar(&(processManager->readyState.filaReady), indiceProcesso);
+    processManager->pcbTable.processoSimulado[indiceProcesso].state = PRONTO;
 }
 
 void comandoP(ProcessManager *processManager){
-    //imprimirReporter(processManager);
+    imprimirReporter(*processManager);
 }
 
 void comandoT(ProcessManager *processManager){
-    //imprimirReporter(processManager);
+    imprimirReporter(*processManager);
+    //Finalizar sistema
 }
 
 void leituraCommander(ProcessManager *processManager, char comando){

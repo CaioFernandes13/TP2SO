@@ -12,54 +12,50 @@ void lerPrograma(ProcessoSimulado *processoSimulado, char* nomeArq){
 
 }
 
-void instrucaoS(ProcessoSimulado *processoSimulado, int n){
+void instrucaoS(char *instrucao, int n){
 
 }
 
-void instrucaoA(ProcessoSimulado *processoSimulado, int n){
+void instrucaoA(char *instrucao, int n){
 
 }
 
-void instrucaoD(ProcessoSimulado *processoSimulado, int n){
+void instrucaoD(char *instrucao, int n){
 
 }
 
-void instrucaoB(ProcessoSimulado *processoSimulado){
+void instrucaoB(char *instrucao){
 
 }
 
-void instrucaoE(ProcessoSimulado *processoSimulado){
+void instrucaoE(char *instrucao){
 
 }
 
-void instrucaoF(ProcessoSimulado *processoSimulado, int n){
+void instrucaoF(char *instrucao, int n){
 
 }
 
-void instrucaoR(ProcessoSimulado *processoSimulado, char* nome){
+void instrucaoR(char *instrucao, char* nome){
 
 }
 
-void executarProcesso(ProcessoSimulado *processoSimulado){
-    char instrucao;
-    char nomeArq[100];
-    int n;
-    instrucao = processoSimulado->vetorProgram[*(processoSimulado->PC)][0];
+void executarInstrucao(char *instrucao, int *n, char *arqNovoProcesso){
     if(instrucao == 'S'){
-        instrucaoS(processoSimulado, n);
+        instrucaoS(instrucao, n);
     }
     if(instrucao == 'A'){
-        instrucaoA(processoSimulado, n);
+        instrucaoA(instrucao, n);
     }
     if(instrucao == 'D'){
-        instrucaoD(processoSimulado, n);
+        instrucaoD(instrucao, n);
     }
-    if(instrucao == 'B') instrucaoB(processoSimulado);
-    if(instrucao == 'E') instrucaoE(processoSimulado);
+    if(instrucao == 'B') instrucaoB(instrucao);
+    if(instrucao == 'E') instrucaoE(instrucao);
     if(instrucao == 'F'){
-        instrucaoF(processoSimulado, n);
+        instrucaoF(instrucao, n);
     }
     if(instrucao == 'R'){
-        instrucaoR(processoSimulado, nomeArq);
+        instrucaoR(instrucao, arqNovoProcesso);
     }
 }

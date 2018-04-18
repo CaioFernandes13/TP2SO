@@ -16,11 +16,12 @@ typedef struct {
     int *PC; //Contador de programa
     int n; //Valor inteiro que será modificado
     int priority; //prioridade do processo
-    int state; //Estado do processo (Executando, Bloqueado, Pronto para execução)
+    int state; //Estado do processo (0 - Executando, 1 - Pronto para execução, 2 - Bloqueado)
     int startTime; //Tempo de início
     int CPUtime; //Tempo de CPU
     char **vetorProgram; //Vetor de programa -- Matriz que armazena as instruções do processo;
 }ProcessoSimulado;
 
-void lerPrograma(ProcessoSimulado processoSimulado, char* nomeArq);
+void lerPrograma(ProcessoSimulado *processoSimulado, char* nomeArq);
+void executarProcesso(ProcessoSimulado *processoSimulado);
 #endif //TP2SO_PROCESSOSIMULADO_H

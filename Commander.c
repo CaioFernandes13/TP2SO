@@ -9,6 +9,7 @@ void entradaArquivo(){
     char nomeArq[100], caminhoArq[100] = "/home/caio/Desktop/TP2SO/";
     char comando;
     FILE *arq;
+    ProcessManager processManager;
     printf("Nome do arquivo de entrada: ");
     getchar();
     //fgets(nomeArq, 100, stdin);
@@ -19,11 +20,13 @@ void entradaArquivo(){
         printf("Erro ao abrir o arquivo!");
         return;
     }
+    //criar pipe
+    processManager = iniciarProcessManager(); //criar ProcessManager
 
     while(1){
         comando = fgetc(arq);
         if(comando == 'Q' || comando == 'U' || comando == 'P' || comando == 'T') {
-            //leituraCommander(comando); //passar comando para o processo ProcessManager
+            leituraCommander(&processManager, comando); //passar comando para o processo ProcessManager
             if(comando == 'T') break;
         }
         else if(comando == '\n');
@@ -38,12 +41,15 @@ void entradaArquivo(){
 
 void entradaPadrao(){
     char comando;
+    ProcessManager processManager;
+    //criar pipe
+    processManager = iniciarProcessManager(); //criar ProcessManager
     printf("Digite um comando (Q, U, P, T).\n");
     while(1){
         getchar();
         scanf("%c", &comando);
         if(comando == 'Q' || comando == 'U' || comando == 'P' || comando == 'T') {
-            //leituraCommander(comando); //passar comando para o processo ProcessManager
+            leituraCommander(&processManager, comando); //passar comando para o processo ProcessManager
             if(comando == 'T') break;
         }
         else{

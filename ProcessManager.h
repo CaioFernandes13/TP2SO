@@ -12,7 +12,7 @@ typedef int Time;
 
 typedef struct {
     //armazenar um ponteiro para o vetor de programa -> struct do processo simulado
-    //ProcessoSimulado * processo;
+    ProcessoSimulado *processo;
 
 }Cpu;
 
@@ -30,6 +30,7 @@ typedef struct {
 
 typedef struct {
     //Processo que está sendo executado no momento----- Usar indice de PcbTable do processo simulado atualmente em execução
+    ProcessoSimulado * processo;
 }RunningState;
 
 
@@ -42,8 +43,8 @@ typedef struct {
     RunningState runningState;
 }ProcessManager;
 
-void iniciarProcessManager(ProcessManager processManager); //Criar o primeiro processo (com o ID = 0) e inicializar todas as suas estruturas de dados
-void leituraCommander(char comando); // process manager recebe, repetidamente, e processa um comando por vez, a partir do processo commander
+ProcessManager iniciarProcessManager(); //Criar o primeiro processo (com o ID = 0) e inicializar todas as suas estruturas de dados
+void leituraCommander(ProcessManager *processManager,char comando); // process manager recebe, repetidamente, e processa um comando por vez, a partir do processo commander
                          /* Ao receber um comando Q, process manager
                             executa a próxima instrução do processo simulado, atualmente em execução, incrementa
                             o valor do contador de programa (exceto para instruções F ou R), incrementa Time e

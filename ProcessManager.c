@@ -5,6 +5,10 @@
 #include "ProcessManager.h"
 #include "ProcessoSimulado.h"
 
+///FALTA CRIAR FORK PARA PROCESSO REPORTER(Chamadas de sistema fork())
+///Função comandoQ() incompleta, falta escalonador, e conferir se a lógica de chamada do processo simulado está correta
+///Funções comandoP() comandoT() incompletas pela falta do fork()
+
 void iniciarBlockedState(ProcessManager * processManager){
     fazFVazia(&(processManager->blockedState.filaBlocked));
 }
@@ -38,15 +42,13 @@ ProcessManager iniciarProcessManager(){
     processManager.cpu.timeProcess = 1; //Unidades de tempo que o processo tem,
     processManager.cpu.usedTime = 0;
     processManager.cpu.vetorProgram = processoSimulado.vetorProgram;
-    /* Iniciando processo simulado */
+    /* Iniciando lista de estados */
     processManager.runningState = 0;
     iniciarBlockedState(&processManager);
     iniciarReadyState(&processManager);
 
     return processManager;
 }
-
-
 
 void comandoQ(ProcessManager *processManager){
     int PC = processManager->cpu.PC;

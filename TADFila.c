@@ -33,7 +33,7 @@ int desenfileirar(TFila *pFila, int *indiceProcessoSimulado){
     if(verificaFilaVazia(pFila)) return 0;
     pCelAux = pFila->pFrente;
     pFila->pFrente-> = pFila->pFrente->pProx;
-    indiceProcessoSimulado = pFila->pFrente->indiceProcessoSimulado;
+    *indiceProcessoSimulado = pFila->pFrente->indiceProcessoSimulado;
     free(pCelAux);
     pFila->tamanho--;
     return 1;

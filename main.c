@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "Commander.h"
-#include <syscall.h>
 
 int main() {
     int control = 0;

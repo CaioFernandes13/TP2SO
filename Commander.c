@@ -2,6 +2,8 @@
 // Created by caio on 16/04/18.
 //
 
+///FALTA CRIAR PIPE E FORK (Chamadas de sistema pipe() e fork())
+
 #include <string.h>
 #include "Commander.h"
 

@@ -8,14 +8,18 @@
 ///BlockedState(TFila blockedState).
 ///*******Se mexer nas filas de estado, as funcoes referente aos comandos devem ser atualizadas**********
 
-#define QUANTMAXPROCESSEXEC 1000
+
 #ifndef TP2SO_PROCESSMANAGER_H
 #define TP2SO_PROCESSMANAGER_H
 
+#define QUANTMAXPROCESSEXEC 1000
 #include "ProcessoSimulado.h"
 #include "Reporter.h"
 #include "TADFila.h"
 #include <syscall.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 enum estados_processo{EXECUTANDO, PRONTO, BLOQUEADO};
 

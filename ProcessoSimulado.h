@@ -25,5 +25,4 @@ typedef struct {
 }ProcessoSimulado;
 
 void lerPrograma(ProcessoSimulado *processoSimulado, char* nomeArq);
-void executarInstrucao(char *processoSimulado, int *n, char *arqNovoProcesso);
 #endif //TP2SO_PROCESSOSIMULADO_H

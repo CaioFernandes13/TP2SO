@@ -32,6 +32,7 @@ ProcessManager iniciarProcessManager(){
     *(processoSimulado.PC) = 0;
     processoSimulado.priority = 0;
     processoSimulado.startTime = 0; //__TIME__;
+    processoSimulado.flag = SIM;
     processoSimulado.state = EXECUTANDO; //Enum estados_processo = 0
     /* Iniciando PcbTable com o processo simulado */
     iniciarPcbTable(&processManager, processoSimulado);
@@ -97,8 +98,12 @@ void instrucaoD(char *instrucao, Cpu *cpu){
 void instrucaoB(Cpu *cpu, PcbTable *pcbTable, RunningState *runningState, BlockedState *blockedState, ReadyState *readyState){
     pcbTable->processoSimulado[*runningState].PC = (int*) cpu->PC;
     pcbTable->processoSimulado[*runningState].n = cpu->n;
-    pcbTable->processoSimulado[*runningState].vetorProgram = cpu->vetorProgram;
     pcbTable->processoSimulado[*runningState].CPUtime += cpu->timeProcess;
+
+    if(pcbTable->processoSimulado[*runningState].priority > 0){
+        pcbTable->processoSimulado[*runningState].priority -= 1 ;
+    }
+
     pcbTable->processoSimulado[*runningState].state = BLOQUEADO;
     enfileirar(&(blockedState->filaBlocked), *runningState);
     desenfileirar(&(readyState->filaReady), runningState);
@@ -111,57 +116,83 @@ void instrucaoB(Cpu *cpu, PcbTable *pcbTable, RunningState *runningState, Blocke
 
 void instrucaoE(Cpu *cpu, PcbTable *pcbTable, RunningState *runningState, BlockedState *blockedState, ReadyState *readyState){
     free(pcbTable->processoSimulado[*runningState].vetorProgram);
+    pcbTable->processoSimulado[*runningState].flag = NAO;
     desenfileirar(&(blockedState->filaBlocked), runningState);
-    desenfileirar(&(readyState->filaReady), runningState);
-    pcbTable->processoSimulado[*runningState].state = EXECUTANDO;
-    cpu->n = pcbTable->processoSimulado[*runningState].n;
-    cpu->vetorProgram = pcbTable->processoSimulado[*runningState].vetorProgram;
-    cpu->PC = (int) pcbTable->processoSimulado[*runningState].PC;
-    cpu->timeProcess = calcularFatia(pcbTable->processoSimulado[*runningState].priority);
+    if(desenfileirar(&(readyState->filaReady), runningState) != 0) {
+        pcbTable->processoSimulado[*runningState].state = EXECUTANDO;
+        cpu->n = pcbTable->processoSimulado[*runningState].n;
+        cpu->vetorProgram = pcbTable->processoSimulado[*runningState].vetorProgram;
+        cpu->PC = (int) pcbTable->processoSimulado[*runningState].PC;
+        cpu->timeProcess = calcularFatia(pcbTable->processoSimulado[*runningState].priority);
+    }
 }
 
-void instrucaoF(char *instrucao, Cpu *cpu){
-    cpu->PC = cpu->PC + recuperarN(instrucao);
+ProcessoSimulado instrucaoF(char *instrucao, Cpu *cpu){
+    ProcessoSimulado processoSimulado;
+
+    processoSimulado.PC = (int*) cpu->PC+1;
+    processoSimulado.n = cpu->n;
+    processoSimulado.vetorProgram = cpu->vetorProgram;
+    processoSimulado.state = PRONTO;
+    processoSimulado.flag = SIM;
+
+    cpu->PC = cpu->PC + recuperarN(instrucao)+1;
+
+    return processoSimulado;
 }
 
 void instrucaoR(char *instrucao, char* nome){
 
 }
 
+int gerarPID(PcbTable pcbTable){
+    int i = 0;
+    while(1){
+        if(pcbTable.processoSimulado[i].flag == NAO){
+            return i;
+        }
+        i++;
+    }
+}
+
 void comandoQ(ProcessManager *processManager){
-    int PC = processManager->cpu.PC;
+    int PC = processManager->cpu.PC, flag;
     char *instrucao, *arqNovoProcesso = NULL;
+    ProcessoSimulado processoSimulado;
+
     instrucao = processManager->cpu.vetorProgram[PC];
 
     if(instrucao[0] == 'S'){
         instrucaoS(instrucao, &(processManager->cpu));
     }
-    if(instrucao[0] == 'A'){
+    else if(instrucao[0] == 'A'){
         instrucaoA(instrucao, &(processManager->cpu));
     }
-    if(instrucao[0] == 'D'){
+    else if(instrucao[0] == 'D'){
         instrucaoD(instrucao, &(processManager->cpu));
     }
-    if(instrucao[0] == 'B'){
+    else if(instrucao[0] == 'B'){
         instrucaoB(&(processManager->cpu), &(processManager->pcbTable), &(processManager->runningState), &(processManager->blockedState), &(processManager->readyState));
     }
-    if(instrucao[0] == 'E'){
+    else if(instrucao[0] == 'E'){
         instrucaoE(&(processManager->cpu), &(processManager->pcbTable), &(processManager->runningState), &(processManager->blockedState), &(processManager->readyState));
     }
-    if(instrucao[0] == 'F'){
-        instrucaoF(instrucao, &(processManager->cpu));
+    else if(instrucao[0] == 'F'){
+       processoSimulado = instrucaoF(instrucao, &(processManager->cpu));
+       processoSimulado.CPUtime = 0;
+       processoSimulado.startTime = processManager->time;
+       processoSimulado.PPID = processManager->pcbTable.processoSimulado[processManager->runningState].PID;
+       processoSimulado.PID = gerarPID(processManager->pcbTable);
+       processoSimulado.priority = processManager->pcbTable.processoSimulado[processManager->runningState].priority;
     }
-    if(instrucao[0] == 'R'){
+    else if(instrucao[0] == 'R'){
         instrucaoR(instrucao, arqNovoProcesso);
     }
 
-    if(instrucao[0] == 'F' || instrucao[0] == 'R'){
-        executarInstrucao(instrucao, &(processManager->cpu.n), arqNovoProcesso); //Executar proxima linha de programa do processo
-    }
-    else{
-        executarInstrucao(instrucao, &(processManager->cpu.n), arqNovoProcesso); //Executar proxima linha de programa do processo
+    if(instrucao[0] != 'F' && instrucao[0] != 'R'){
         processManager->cpu.PC = PC + 1;
     }
+    processManager->cpu.usedTime += 1;
     processManager->time = processManager->time + 1;
     //escalonar(processManager);
 }

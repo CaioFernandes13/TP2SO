@@ -6,12 +6,12 @@
 #ifndef TP2SO_PROCESSOSIMULADO_H
 #define TP2SO_PROCESSOSIMULADO_H
 #define MAXTAMINSTRUCTION 100
-
 #include <stdlib.h>
 #include <stdio.h>
 #include "ProcessManager.h"
 #include "ArquivoTexto.h"
 
+enum flagPCBTable {SIM, NAO};
 typedef struct {
     int PID;
     int PPID;
@@ -22,6 +22,7 @@ typedef struct {
     int startTime; //Tempo de início
     int CPUtime; //Tempo de CPU
     char **vetorProgram; //Vetor de programa -- Matriz que armazena as instruções do processo;
+    int flag;
 }ProcessoSimulado;
 
 void lerPrograma(ProcessoSimulado *processoSimulado, char* nomeArq);

@@ -25,5 +25,5 @@ typedef struct {
     int flag;
 }ProcessoSimulado;
 
-void lerPrograma(ProcessoSimulado *processoSimulado, char* nomeArq);
+void lerPrograma(char **vetorProgram, char* nomeArq);
 #endif //TP2SO_PROCESSOSIMULADO_H

@@ -7,7 +7,6 @@
 #include "ProcessManager.h"
 
 
-void lerPrograma(ProcessoSimulado *processoSimulado, char* nomeArq){
-    processoSimulado->vetorProgram = leituraArq(nomeArq, MAXTAMINSTRUCTION);
-
+void lerPrograma(char **vetorProgram, char* nomeArq){
+    vetorProgram = leituraArq(nomeArq, MAXTAMINSTRUCTION);
 }

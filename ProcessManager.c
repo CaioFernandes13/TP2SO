@@ -26,7 +26,7 @@ ProcessManager iniciarProcessManager(){
     /* Iniciando processo simulado */
     processoSimulado.PID = 0;
     processoSimulado.PPID = 0;
-    lerPrograma(&processoSimulado, "init");
+    lerPrograma(processoSimulado.vetorProgram, "init");
     processoSimulado.CPUtime = 0;
     processoSimulado.n = 0;
     *(processoSimulado.PC) = 0;
@@ -141,8 +141,21 @@ ProcessoSimulado instrucaoF(char *instrucao, Cpu *cpu){
     return processoSimulado;
 }
 
-void instrucaoR(char *instrucao, char* nome){
-
+void instrucaoR(char *instrucao, Cpu *cpu){
+    int n, i = 0;
+    char instrucaoAux[MAXTAMINSTRUCTION], caractere;
+    strcpy(instrucaoAux, instrucao);
+    caractere = instrucaoAux[i+2];
+    while(1){
+        instrucaoAux[i] = caractere;
+        i++;
+        if((caractere = instrucaoAux[i+2]) == '\0'){
+            instrucaoAux[i] = caractere;
+            break;
+        }
+    }
+    lerPrograma(cpu->vetorProgram, instrucaoAux);
+    cpu->PC = 0;
 }
 
 int gerarPID(PcbTable pcbTable){
@@ -186,7 +199,7 @@ void comandoQ(ProcessManager *processManager){
        processoSimulado.priority = processManager->pcbTable.processoSimulado[processManager->runningState].priority;
     }
     else if(instrucao[0] == 'R'){
-        instrucaoR(instrucao, arqNovoProcesso);
+        instrucaoR(instrucao, &(processManager->cpu));
     }
 
     if(instrucao[0] != 'F' && instrucao[0] != 'R'){
